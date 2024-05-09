@@ -33,16 +33,26 @@ MaNV varchar(10) not null,
 Tongtien float null)
 
 create table CT_Hoadon
-(SoHD varchar(10) not null primary key,
-Mahang varchar(10) not null ,
+(SoHD varchar(10) not null,
+Mahang varchar(10) not null,
 Maloai varchar(10) not null,
 Soluong int not null,
 Dongia float not null,
+PRIMARY KEY CLUSTERED (SoHD ASC, Mahang ASC),
 CONSTRAINT unique_Mahang UNIQUE (Mahang))
 
 create table Loaihang
 (Maloai varchar(10) not null primary key,
 Tenloai nvarchar(50) not null)
+
+create table MuaHang(
+Mahangmua nvarchar(10) null,
+TenHang nvarchar(50) null,
+Giatien int null,
+Soluong int null,
+ThanhTien int null)
+
+
 ------------------------CHÈN THÔNG TIN---------------------------------------------------------
 insert into KhachHang(MaKH,TenKKH,DiaChi,Email,SDT)
 values
@@ -56,7 +66,7 @@ insert into NhanVien(MaNV,TenNV,Diachi,Matkhau,Quyen)
 values
 ('NV001',N'Nguyễn Thị Linh',N'Hà Nội','linh123',N'Nhân viên'),
 ('NV002',N'Mai Hương Lý',N'Ninh Bình','ly243',N'Quản lý'),
-('NV003', N'Đặng Tiến Thành','Hà Nội', 'thanh345', N'Nhân viên'),
+('NV003',N'Đặng Tiến Thành',N'Hà Nội', 'thanh345', N'Nhân viên'),
 ('NV004',N'Nguyễn Minh Văn',N'Hà Nam','van456',N'Quản lý'),
 ('NV005',N'Phạm Văn Khánh',N'Nam Định','khanh567',N'Quản lý')
 
@@ -68,21 +78,21 @@ values
 ('hh004', 'TH1',N'Vở', 'VND',10000 ),
 ('hh005', 'TH1',N'Mì tôm', 'VND',3000 )
 
-insert into Hoadon(SoHD,Ngayban,MaKH,MaNV)
-values
-('hd001', '2023/09/05','KH001', 'NV001'),
-('hd002', '2023/07/05','KH002', 'NV002'),
-('hd003', '2023/08/05','KH003', 'NV003'),
-('hd004', '2023/09/05','KH004', 'NV004'),
-('hd005', '2023/02/05','KH005', 'NV005')
+--insert into Hoadon(SoHD,Ngayban,MaKH,MaNV)
+--values
+--('hd001', '2023/09/05','KH001', 'NV001'),
+--('hd002', '2023/07/05','KH002', 'NV002'),
+--('hd003', '2023/08/05','KH003', 'NV003'),
+--('hd004', '2023/09/05','KH004', 'NV004'),
+--('hd005', '2023/02/05','KH005', 'NV005')
 
-insert into CT_Hoadon(SoHD,Mahang,Maloai,Soluong,Dongia)
-values
-('hd001','hh001', 'BC01',3, 100000),
-('hd002','hh002', 'NGK02',3, 200000),
-('hd003','hh003', 'BQ03',2, 150000),
-('hd004','hh004', 'Vo04',2, 180000),
-('hd005','hh005', 'MT05',5, 250000)
+--insert into CT_Hoadon(SoHD,Mahang,Maloai,Soluong,Dongia)
+--values
+--('hd001','hh001', 'BC01',3, 100000),
+--('hd002','hh002', 'NGK02',3, 200000),
+--('hd003','hh003', 'BQ03',2, 150000),
+--('hd004','hh004', 'Vo04',2, 180000),
+--('hd005','hh005', 'MT05',5, 250000)
 
 insert into Loaihang(Maloai,Tenloai)
 values
@@ -137,6 +147,8 @@ alter table Hanghoa add foreign key(Maloai) references Loaihang(Maloai)
 
 
 SELECT * FROM KhachHang ORDER BY TenKKH ASC
+go
+
 CREATE PROCEDURE getHangHoaData
 AS
 BEGIN
@@ -153,6 +165,7 @@ BEGIN
  
    INNER JOIN LoaiHang ON HangHoa.MaLoai = LoaiHang.MaLoai
 END
+go
 
 CREATE PROCEDURE getHoaDonData
 AS
@@ -172,5 +185,4 @@ BEGIN
    INNER JOIN KhachHang ON HoaDon.MaKH = KhachHang.MaKH
    INNER JOIN HangHoa ON CT_Hoadon.MaHang = HangHoa.MaHang
 END
-
-drop table Hoadon
+go
